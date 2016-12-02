@@ -1,9 +1,12 @@
 package com.example.kush.stayput.countdown;
 
+import android.content.Context;
+import android.os.Vibrator;
 import android.os.CountDownTimer;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.example.kush.stayput.Consts;
 import com.example.kush.stayput.MainActivity;
 
 /**
@@ -16,6 +19,8 @@ public class TimerCountdown  {
 
         long millisInFuture = MainActivity.getTimeRemaining();
         long countDownInterval = 1000;
+
+        tView.setTextColor(Consts.TIMER_RED);
 
         new CountDownTimer(millisInFuture, countDownInterval) {
                 public void onTick(long millisUntilFinished) {
@@ -31,13 +36,13 @@ public class TimerCountdown  {
             }
             public void onFinish() {
                 //Do something when count down finished
-                tView.setText("Done");
-                //Disable the pause, resume and cancel button
-                btnPause.setEnabled(false);
-                btnResume.setEnabled(false);
-                btnCancel.setEnabled(false);
-                //Enable the start button
-                btnStart.setEnabled(true);
+                MainActivity.setCountUp(true);
+
+                Vibrator v = (Vibrator) MainActivity.getContext().getSystemService(Context.VIBRATOR_SERVICE);
+                v.vibrate(3000);
+
+                MainActivity.setTimeRemaining(Consts.OVERTIME_MAX);
+                new TimerCountup(btnStart, btnPause, btnResume, btnCancel, tView);
             }
         }.start();
     }
