@@ -14,12 +14,32 @@ import net.example.kush.stayput.R;
 
 public class MainActivity extends Activity {
 
+    //Declare a variable to hold the countUp flag
+    private static boolean countUp = false;
     //Declare a variable to hold count down timer's paused status
     private static boolean isPaused = false;
     //Declare a variable to hold count down timer's canceled status
     private static boolean isCanceled = false;
     //Declare a variable to hold CountDownTimer remaining time
-    private static long timeRemaining = (7*60*60*1000)+(42*60*1000);
+    private static long timeRemaining = Consts.WORKTIME_MAX;
+
+    public static MainActivity getContext() {
+        return context;
+    }
+
+    public static void setContext(MainActivity context) {
+        MainActivity.context = context;
+    }
+
+    private static MainActivity context;
+
+    public static boolean isCountUp() {
+        return countUp;
+    }
+
+    public static void setCountUp(boolean countUp) {
+        MainActivity.countUp = countUp;
+    }
 
     public static boolean isPaused() {
         return isPaused;
@@ -48,7 +68,7 @@ public class MainActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        MainActivity.setContext(this);
         //set the main layout of the activity
         setContentView(R.layout.main);
 
