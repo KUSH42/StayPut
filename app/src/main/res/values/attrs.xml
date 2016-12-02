@@ -1,0 +1,14 @@
+<resources>
+
+    <!-- The CalendarView style. -->
+    <attr name="calendarViewStyle" format="reference" />
+
+    <declare-styleable name="CalendarView">
+    </declare-styleable>
+
+    <!-- Framework styleables are not public. -->
+    <declare-styleable name="TextAppearanceCompatStyleable">
+        <attr name="android:textSize" />
+    </declare-styleable>
+
+</resources>
