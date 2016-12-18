@@ -1,12 +1,13 @@
-package com.example.kush.stayput.countdown;
+package com.kush.app.stayput.countdown;
 
-import android.graphics.Color;
+import android.content.Context;
 import android.os.CountDownTimer;
+import android.os.Vibrator;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.example.kush.stayput.Consts;
-import com.example.kush.stayput.MainActivity;
+import com.kush.app.stayput.Consts;
+import com.kush.app.stayput.MainActivity;
 
 /**
  * Created by Kush on 02.12.2016.
@@ -19,12 +20,11 @@ public class TimerCountup {
         long millisSurplus = MainActivity.getTimeRemaining();
         long countDownInterval = 1000;
 
-        tView.setTextColor(Consts.TIMER_GREEN);
+        tView.setTextColor(Consts.TIMER_COLOR_GREEN);
 
         new CountDownTimer(millisSurplus, countDownInterval) {
             public void onTick(long millisUntilFinished) {
                 long millisGained;
-
                 //Do something in every tick
                 if (MainActivity.isPaused() || MainActivity.isCanceled()) {
                     //If user requested to pause or cancel the count down timer
@@ -38,7 +38,8 @@ public class TimerCountup {
             }
             public void onFinish() {
                 //Do something when count down finished
-                tView.setText("Done");
+                Vibrator v = (Vibrator) MainActivity.getContext().getSystemService(Context.VIBRATOR_SERVICE);
+                v.vibrate(3000);
                 //Disable the pause, resume and cancel button
                 btnPause.setEnabled(false);
                 btnResume.setEnabled(false);

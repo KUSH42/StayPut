@@ -1,4 +1,4 @@
-package com.example.kush.stayput;
+package com.kush.app.stayput;
 
 import org.junit.Test;
 

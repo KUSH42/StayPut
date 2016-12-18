@@ -1,9 +1,9 @@
-package com.example.kush.stayput.listeners;
+package com.kush.app.stayput.listeners;
 
 import android.view.View;
 import android.widget.Button;
 
-import com.example.kush.stayput.MainActivity;
+import com.kush.app.stayput.MainActivity;
 
 /**
  * Created by Kush on 26.11.2016.

@@ -1,16 +1,20 @@
-package com.example.kush.stayput;
+package com.kush.app.stayput;
 
 import android.os.Bundle;
 import android.app.Activity;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.example.kush.stayput.listeners.CancelButtonListener;
-import com.example.kush.stayput.listeners.PauseButtonListener;
-import com.example.kush.stayput.listeners.ResumeButtonListener;
-import com.example.kush.stayput.listeners.StartButtonListener;
+import com.kush.app.stayput.listeners.CancelButtonListener;
+import com.kush.app.stayput.listeners.PauseButtonListener;
+import com.kush.app.stayput.listeners.ResumeButtonListener;
+import com.kush.app.stayput.listeners.StartButtonListener;
 
 import net.example.kush.stayput.R;
+
+/**
+ * @value #countUp If true, is counting up. Default on app creation is false.
+ */
 
 public class MainActivity extends Activity {
 
@@ -22,6 +26,8 @@ public class MainActivity extends Activity {
     private static boolean isCanceled = false;
     //Declare a variable to hold CountDownTimer remaining time
     private static long timeRemaining = Consts.WORKTIME_MAX;
+    //Reference for main context
+    private static MainActivity context;
 
     public static MainActivity getContext() {
         return context;
@@ -30,8 +36,6 @@ public class MainActivity extends Activity {
     public static void setContext(MainActivity context) {
         MainActivity.context = context;
     }
-
-    private static MainActivity context;
 
     public static boolean isCountUp() {
         return countUp;
@@ -68,6 +72,7 @@ public class MainActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //save context to static variable
         MainActivity.setContext(this);
         //set the main layout of the activity
         setContentView(R.layout.main);

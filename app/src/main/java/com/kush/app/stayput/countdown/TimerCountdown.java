@@ -1,4 +1,4 @@
-package com.example.kush.stayput.countdown;
+package com.kush.app.stayput.countdown;
 
 import android.content.Context;
 import android.os.Vibrator;
@@ -6,8 +6,8 @@ import android.os.CountDownTimer;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.example.kush.stayput.Consts;
-import com.example.kush.stayput.MainActivity;
+import com.kush.app.stayput.Consts;
+import com.kush.app.stayput.MainActivity;
 
 /**
  * Created by Kush on 02.12.2016.
@@ -20,10 +20,10 @@ public class TimerCountdown  {
         long millisInFuture = MainActivity.getTimeRemaining();
         long countDownInterval = 1000;
 
-        tView.setTextColor(Consts.TIMER_RED);
+        tView.setTextColor(Consts.TIMER_COLOR_RED);
 
         new CountDownTimer(millisInFuture, countDownInterval) {
-                public void onTick(long millisUntilFinished) {
+            public void onTick(long millisUntilFinished) {
                 //Do something in every tick
                 if (MainActivity.isPaused() || MainActivity.isCanceled()) {
                     //If user requested to pause or cancel the count down timer
