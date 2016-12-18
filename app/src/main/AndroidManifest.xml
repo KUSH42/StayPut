@@ -12,7 +12,7 @@
         android:label="@string/app_name"
         android:icon="@drawable/ic_launcher">
 
-        <activity android:name="com.example.kush.stayput.MainActivity"
+        <activity android:name="com.kush.app.stayput.MainActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait">
             <intent-filter>

@@ -1,4 +1,4 @@
-package com.example.kush.stayput;
+package com.kush.app.stayput;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
@@ -21,6 +21,6 @@ public class ExampleInstrumentedTest {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getTargetContext();
 
-        assertEquals("com.example.kush.stayput", appContext.getPackageName());
+        assertEquals(true, 1 == 1);
     }
 }

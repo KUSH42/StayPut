@@ -1,12 +1,12 @@
-package com.example.kush.stayput.listeners;
+package com.kush.app.stayput.listeners;
 
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.example.kush.stayput.MainActivity;
-import com.example.kush.stayput.countdown.TimerCountdown;
-import com.example.kush.stayput.Consts;
+import com.kush.app.stayput.MainActivity;
+import com.kush.app.stayput.countdown.TimerCountdown;
+import com.kush.app.stayput.Consts;
 
 /**
  * Created by Kush on 26.11.2016.
