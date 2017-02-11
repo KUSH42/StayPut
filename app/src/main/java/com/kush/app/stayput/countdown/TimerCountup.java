@@ -77,7 +77,7 @@ public class TimerCountup {
             public void onFinish() {
                 //Do something when count down finished
                 Vibrator v = (Vibrator) MainActivity.getContext().getSystemService(Context.VIBRATOR_SERVICE);
-                v.vibrate(3000);
+                v.vibrate(1500);
                 //Disable the pause, resume and cancel button
                 btnPause.setEnabled(false);
                 btnResume.setEnabled(false);

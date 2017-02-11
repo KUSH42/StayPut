@@ -120,5 +120,8 @@ public class MainActivity extends Activity {
         btnPause.setOnClickListener(new PauseButtonListener(btnStart, btnPause, btnResume, btnCancel));
         btnResume.setOnClickListener(new ResumeButtonListener(btnStart, btnPause, btnResume, btnCancel, tView));
         btnCancel.setOnClickListener(new CancelButtonListener(btnStart, btnPause, btnResume, btnCancel, tView));
+
+        //start TimerService
+        startService();
     }
 }

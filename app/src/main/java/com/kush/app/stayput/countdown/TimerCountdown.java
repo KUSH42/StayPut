@@ -67,7 +67,7 @@ public class TimerCountdown {
                 //Do something when count down finished
                 MainActivity.setCountUp(true);
                 Vibrator v = (Vibrator) MainActivity.getContext().getSystemService(Context.VIBRATOR_SERVICE);
-                v.vibrate(3000);
+                v.vibrate(1500);
                 MainActivity.setTimeRemaining(Consts.OVERTIME_MAX);
                 TimerCountup.getInstance();
             }
