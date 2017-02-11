@@ -43,6 +43,6 @@ public class StartButtonListener implements View.OnClickListener{
         btnCancel.setEnabled(true);
 
         //Initialize a new CountDownTimer instance
-        TimerCountdown.getInstance();
+        TimerCountdown.getInstance().reset();
     }
 }
