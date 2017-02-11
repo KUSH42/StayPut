@@ -7,14 +7,16 @@ import com.kush.app.stayput.MainActivity;
 
 /**
  * Created by Kush on 26.11.2016.
+ *
+ * Listener for the pause button on main activity
  */
 
 public class PauseButtonListener implements View.OnClickListener {
 
-    private Button btnStart;
-    private Button btnPause;
-    private Button btnResume;
-    private Button btnCancel;
+    private final Button btnStart;
+    private final Button btnPause;
+    private final Button btnResume;
+    private final Button btnCancel;
 
     public PauseButtonListener (Button btnStart, Button btnPause, Button btnResume, Button btnCancel) {
         this.btnStart = btnStart;

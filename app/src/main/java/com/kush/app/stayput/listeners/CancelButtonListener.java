@@ -8,15 +8,17 @@ import com.kush.app.stayput.MainActivity;
 
 /**
  * Created by Kush on 02.12.2016.
+ *
+ * Listener for the cancel button on main activity
  */
 
 public class CancelButtonListener implements View.OnClickListener {
 
-    private Button btnStart;
-    private Button btnPause;
-    private Button btnResume;
-    private Button btnCancel;
-    private TextView tView;
+    private final Button btnStart;
+    private final Button btnPause;
+    private final Button btnResume;
+    private final Button btnCancel;
+    private final TextView tView;
 
     public CancelButtonListener (Button btnStart, Button btnPause, Button btnResume, Button btnCancel, TextView tView) {
         this.btnStart = btnStart;

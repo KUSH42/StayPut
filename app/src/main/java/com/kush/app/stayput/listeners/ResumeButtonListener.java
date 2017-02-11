@@ -10,15 +10,17 @@ import com.kush.app.stayput.countdown.TimerCountup;
 
 /**
  * Created by Kush on 02.12.2016.
+ *
+ * Listener for the resume button on main activity
  */
 
 public class ResumeButtonListener implements View.OnClickListener {
 
-    private Button btnStart;
-    private Button btnPause;
-    private Button btnResume;
-    private Button btnCancel;
-    private TextView tView;
+    private final Button btnStart;
+    private final Button btnPause;
+    private final Button btnResume;
+    private final Button btnCancel;
+    private final TextView tView;
 
     public ResumeButtonListener (Button btnStart, Button btnPause, Button btnResume, Button btnCancel, TextView tView) {
         this.btnStart = btnStart;
@@ -41,10 +43,10 @@ public class ResumeButtonListener implements View.OnClickListener {
         MainActivity.setCanceled(false);
         //Initialize a new CountDownTimer instance
         if (MainActivity.isCountUp()) {
-            new TimerCountup (btnStart, btnPause, btnResume, btnCancel, tView);
+            TimerCountup.getInstance().reset();
         }
         else {
-            new TimerCountdown(btnStart, btnPause, btnResume, btnCancel, tView);
+           TimerCountdown.getInstance().reset();
         }
 
         //Set a Click Listener for cancel/stop button

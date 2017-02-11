@@ -28,13 +28,39 @@ public class MainActivity extends Activity {
     private static long timeRemaining = Consts.WORKTIME_MAX;
     //Reference for main context
     private static MainActivity context;
+    //GUI references
+    private static TextView tView ;
+    private static Button btnStart;
+    private static Button btnPause;
+    private static Button btnResume;
+    private static Button btnCancel;
+
+    public static Button getBtnCancel() {
+        return btnCancel;
+    }
+
+    public static TextView getView() {
+        return tView;
+    }
+
+    public static Button getBtnStart() {
+        return btnStart;
+    }
+
+    public static Button getBtnPause() {
+        return btnPause;
+    }
+
+    public static Button getBtnResume() {
+        return btnResume;
+    }
+
+    public static TextView getTextView() {
+        return tView;
+    }
 
     public static MainActivity getContext() {
         return context;
-    }
-
-    public static void setContext(MainActivity context) {
-        MainActivity.context = context;
     }
 
     public static boolean isCountUp() {
@@ -73,16 +99,16 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //save context to static variable
-        MainActivity.setContext(this);
+        MainActivity.context = this;
         //set the main layout of the activity
         setContentView(R.layout.main);
 
         //Get reference of the XML layout's widgets
-        final TextView tView = (TextView) findViewById(R.id.tv);
-        final Button btnStart = (Button) findViewById(R.id.btn_start);
-        final Button btnPause = (Button) findViewById(R.id.btn_pause);
-        final Button btnResume = (Button) findViewById(R.id.btn_resume);
-        final Button btnCancel = (Button) findViewById(R.id.btn_cancel);
+        tView = (TextView) findViewById(R.id.tv);
+        btnStart = (Button) findViewById(R.id.btn_start);
+        btnPause = (Button) findViewById(R.id.btn_pause);
+        btnResume = (Button) findViewById(R.id.btn_resume);
+        btnCancel = (Button) findViewById(R.id.btn_cancel);
 
         //Disable buttons
         btnPause.setEnabled(false);
@@ -90,7 +116,7 @@ public class MainActivity extends Activity {
         btnCancel.setEnabled(false);
 
         //Initialize listeners
-        btnStart.setOnClickListener(new StartButtonListener(btnStart, btnPause, btnResume, btnCancel, tView));
+        btnStart.setOnClickListener(new StartButtonListener(btnStart, btnPause, btnResume, btnCancel));
         btnPause.setOnClickListener(new PauseButtonListener(btnStart, btnPause, btnResume, btnCancel));
         btnResume.setOnClickListener(new ResumeButtonListener(btnStart, btnPause, btnResume, btnCancel, tView));
         btnCancel.setOnClickListener(new CancelButtonListener(btnStart, btnPause, btnResume, btnCancel, tView));

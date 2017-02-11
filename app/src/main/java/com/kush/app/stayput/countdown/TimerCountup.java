@@ -11,18 +11,56 @@ import com.kush.app.stayput.MainActivity;
 
 /**
  * Created by Kush on 02.12.2016.
+ *
+ * Counts up and shit
+ * Singleton
+ *
  */
 
 public class TimerCountup {
 
-    public TimerCountup (final Button btnStart, final Button btnPause, final Button btnResume, final Button btnCancel, final TextView tView) {
+    private final Button btnStart;
+    private final Button btnPause;
+    private final Button btnResume;
+    private final Button btnCancel;
+    private final TextView tView;
+    private CountDownTimer timer;
+    private long millisSurplus;
+    private long countDownInterval;
 
-        long millisSurplus = MainActivity.getTimeRemaining();
-        long countDownInterval = 1000;
+    private static TimerCountup instance;
 
+    public static TimerCountup getInstance() {
+        if (instance == null) {
+            instance = new TimerCountup();
+            return instance;
+        }
+        else {
+            return instance;
+        }
+    }
+
+    private TimerCountup () {
+        btnStart = MainActivity.getBtnStart();
+        btnPause = MainActivity.getBtnPause();
+        btnResume = MainActivity.getBtnResume();
+        btnCancel = MainActivity.getBtnCancel();
+        tView = MainActivity.getView();
+        reset();
+    }
+
+    //Method for resetting/initializing the Countup
+    public void reset() {
+        millisSurplus = MainActivity.getTimeRemaining();
+        countDownInterval = 1000;
         tView.setTextColor(Consts.TIMER_COLOR_GREEN);
+        if (timer != null) { timer.cancel();}
+        timer = newTimer();
+    }
 
-        new CountDownTimer(millisSurplus, countDownInterval) {
+    //Method for initializing an appropriate CountDownTimer
+    private CountDownTimer newTimer() {
+        return         new CountDownTimer(millisSurplus, countDownInterval) {
             public void onTick(long millisUntilFinished) {
                 long millisGained;
                 //Do something in every tick
