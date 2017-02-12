@@ -1,37 +1,36 @@
 package com.kush.app.stayput.listeners;
 
+import android.content.Intent;
 import android.view.View;
 import android.widget.Button;
-import android.widget.TextView;
 
 import com.kush.app.stayput.MainActivity;
-import com.kush.app.stayput.countdown.TimerCountdown;
-import com.kush.app.stayput.countdown.TimerCountup;
+import com.kush.app.stayput.countdown.Timer;
 
 /**
  * Created by Kush on 02.12.2016.
- *
+ * <p>
  * Listener for the resume button on main activity
  */
 
 public class ResumeButtonListener implements View.OnClickListener {
 
+    private final MainActivity context;
     private final Button btnStart;
     private final Button btnPause;
     private final Button btnResume;
     private final Button btnCancel;
-    private final TextView tView;
 
-    public ResumeButtonListener (Button btnStart, Button btnPause, Button btnResume, Button btnCancel, TextView tView) {
-        this.btnStart = btnStart;
-        this.btnPause = btnPause;
-        this.btnResume = btnResume;
-        this.btnCancel = btnCancel;
-        this.tView = tView;
+    public ResumeButtonListener(MainActivity context) {
+        this.context = context;
+        this.btnStart = MainActivity.getBtnStart();
+        this.btnPause = MainActivity.getBtnPause();
+        this.btnResume = MainActivity.getBtnResume();
+        this.btnCancel = MainActivity.getBtnCancel();
     }
 
     @Override
-    public void onClick (View v){
+    public void onClick(View v) {
         //Disable the start and resume button
         btnStart.setEnabled(false);
         btnResume.setEnabled(false);
@@ -41,15 +40,11 @@ public class ResumeButtonListener implements View.OnClickListener {
         //Specify the current state is not paused and canceled.
         MainActivity.setPaused(false);
         MainActivity.setCanceled(false);
-        //Initialize a new CountDownTimer instance
-        if (MainActivity.isCountUp()) {
-            TimerCountup.getInstance().reset();
-        }
-        else {
-           TimerCountdown.getInstance().reset();
-        }
+        //Start Timer Service
+        Intent i = new Intent(context, Timer.class);
+        context.startService(i);
 
         //Set a Click Listener for cancel/stop button
-        btnCancel.setOnClickListener(new CancelButtonListener(btnStart, btnPause, btnResume, btnCancel, tView));
+        btnCancel.setOnClickListener(new CancelButtonListener(context));
     }
 }

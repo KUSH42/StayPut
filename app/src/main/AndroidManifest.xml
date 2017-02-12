@@ -4,7 +4,9 @@
     android:versionCode="1"
     android:versionName="1.0">
 
-    <uses-sdk android:minSdkVersion="8" android:targetSdkVersion="16" />
+    <uses-sdk
+        android:minSdkVersion="8"
+        android:targetSdkVersion="16" />
     <uses-permission android:name="android.permission.VIBRATE"></uses-permission>
 
     <application
@@ -13,7 +15,12 @@
         android:launchMode="singleTask"
         android:icon="@drawable/ic_launcher">
 
-        <activity android:name="com.kush.app.stayput.MainActivity"
+        <service
+            android:name="com.kush.app.stayput.countdown.Timer"
+            android:label="COUNTDOWN"></service>
+
+        <activity
+            android:name="com.kush.app.stayput.MainActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait">
             <intent-filter>

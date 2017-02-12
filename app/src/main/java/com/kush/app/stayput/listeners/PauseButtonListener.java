@@ -1,34 +1,42 @@
 package com.kush.app.stayput.listeners;
 
+import android.content.Intent;
 import android.view.View;
 import android.widget.Button;
 
 import com.kush.app.stayput.MainActivity;
+import com.kush.app.stayput.countdown.Timer;
 
 /**
  * Created by Kush on 26.11.2016.
- *
+ * <p>
  * Listener for the pause button on main activity
  */
 
 public class PauseButtonListener implements View.OnClickListener {
 
+    private final MainActivity context;
     private final Button btnStart;
     private final Button btnPause;
     private final Button btnResume;
     private final Button btnCancel;
 
-    public PauseButtonListener (Button btnStart, Button btnPause, Button btnResume, Button btnCancel) {
-        this.btnStart = btnStart;
-        this.btnPause = btnPause;
-        this.btnResume = btnResume;
-        this.btnCancel = btnCancel;
+    public PauseButtonListener(MainActivity context) {
+        this.context = context;
+        this.btnStart = MainActivity.getBtnStart();
+        this.btnPause = MainActivity.getBtnPause();
+        this.btnResume = MainActivity.getBtnResume();
+        this.btnCancel = MainActivity.getBtnCancel();
     }
 
     @Override
-    public void onClick (View v){
+    public void onClick(View v) {
         //When user request to pause the CountDownTimer
-       MainActivity.setPaused(true);
+        MainActivity.setPaused(true);
+
+        //Stop Timer Service
+        Intent i = new Intent(context, Timer.class);
+        context.stopService(i);
 
         //Enable the resume and cancel button
         btnResume.setEnabled(true);

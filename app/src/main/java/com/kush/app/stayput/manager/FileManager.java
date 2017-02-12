@@ -11,7 +11,7 @@ import java.io.Serializable;
 
 /**
  * Created by Kush on 11.02.2017.
- *
+ * <p>
  * FileManager class that handles serialization of generic serializables
  */
 
@@ -22,10 +22,10 @@ public class FileManager {
     /**
      * Saves a serializable object.
      *
-     * @param context The application context.
+     * @param context      The application context.
      * @param objectToSave The object to save.
-     * @param fileName The name of the file.
-     * @param <T> The type of the object.
+     * @param fileName     The name of the file.
+     * @param <T>          The type of the object.
      */
 
     public static <T extends Serializable> void saveFile(Context context, T objectToSave, String fileName) {
@@ -45,14 +45,13 @@ public class FileManager {
     /**
      * Loads a serializable object.
      *
-     * @param context The application context.
+     * @param context  The application context.
      * @param fileName The filename.
-     * @param <T> The object type.
-     *
+     * @param <T>      The object type.
      * @return the serializable object.
      */
 
-    public static<T extends Serializable> T readFile(Context context, String fileName) {
+    public static <T extends Serializable> T readFile(Context context, String fileName) {
         T objectToReturn = null;
 
         try {
@@ -74,7 +73,7 @@ public class FileManager {
     /**
      * Deletes a specified file.
      *
-     * @param context The application context.
+     * @param context  The application context.
      * @param filename The name of the file.
      */
 

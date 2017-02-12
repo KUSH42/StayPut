@@ -1,7 +1,7 @@
 package com.kush.app.stayput;
 
-import android.os.Bundle;
 import android.app.Activity;
+import android.os.Bundle;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -29,7 +29,7 @@ public class MainActivity extends Activity {
     //Reference for main context
     private static MainActivity context;
     //GUI references
-    private static TextView tView ;
+    private static TextView tView;
     private static Button btnStart;
     private static Button btnPause;
     private static Button btnResume;
@@ -116,12 +116,10 @@ public class MainActivity extends Activity {
         btnCancel.setEnabled(false);
 
         //Initialize listeners
-        btnStart.setOnClickListener(new StartButtonListener(btnStart, btnPause, btnResume, btnCancel));
-        btnPause.setOnClickListener(new PauseButtonListener(btnStart, btnPause, btnResume, btnCancel));
-        btnResume.setOnClickListener(new ResumeButtonListener(btnStart, btnPause, btnResume, btnCancel, tView));
-        btnCancel.setOnClickListener(new CancelButtonListener(btnStart, btnPause, btnResume, btnCancel, tView));
+        btnStart.setOnClickListener(new StartButtonListener(context));
+        btnPause.setOnClickListener(new PauseButtonListener(context));
+        btnResume.setOnClickListener(new ResumeButtonListener(context));
+        btnCancel.setOnClickListener(new CancelButtonListener(context));
 
-        //start TimerService
-        startService();
     }
 }
