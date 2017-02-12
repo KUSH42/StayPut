@@ -75,20 +75,20 @@ public class MainActivity extends Activity {
         return isPaused;
     }
 
-    public static boolean isCanceled() {
-        return isCanceled;
-    }
-
-    public static long getTimeRemaining() {
-        return timeRemaining;
-    }
-
     public static void setPaused(boolean paused) {
         isPaused = paused;
     }
 
+    public static boolean isCanceled() {
+        return isCanceled;
+    }
+
     public static void setCanceled(boolean canceled) {
         isCanceled = canceled;
+    }
+
+    public static long getTimeRemaining() {
+        return timeRemaining;
     }
 
     public static void setTimeRemaining(long newTimeRemaining) {
