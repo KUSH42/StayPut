@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="net.example.kush.stayput"
+    package="com.kush.app.stayput"
     android:versionCode="1"
     android:versionName="1.0"
     tools:ignore="GradleOverrides">
@@ -11,9 +11,10 @@
         android:targetSdkVersion="23"
         tools:ignore="GradleOverrides,OldTargetApi" />
     <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
 
     <application
-        android:icon="@drawable/ic_launcher"
+        android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:launchMode="standard"
         android:theme="@style/CalendarTheme">

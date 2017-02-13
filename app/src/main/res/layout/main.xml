@@ -6,19 +6,31 @@
     android:gravity="center"
     android:orientation="vertical">
 
-    <CalendarView
+
+
+    <!--CalendarView
         android:layout_width="280dip"
         android:layout_height="280dip"
         android:firstDayOfWeek="2"
         android:maxDate="31/12/2029"
-        android:minDate="01/01/2000" />
+        android:minDate="01/01/2000" /-->
+
+    <TextView
+        android:id="@+id/tv2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="100dp"
+        android:text="Zeitpunkt Ende"
+        android:textColor="#555555"
+        android:textSize="48sp"
+        android:textStyle="bold" />
 
     <TextView
         android:id="@+id/tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="100dp"
-        android:text="Arbeitszeit"
+        android:text=""
         android:textColor="#F03333"
         android:textSize="48sp"
         android:textStyle="bold" />
@@ -35,7 +47,8 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/tv"
             android:text="Start"
-            tools:ignore="ObsoleteLayoutParam" />
+            tools:ignore="ObsoleteLayoutParam"
+            android:elevation="0dp" />
 
         <Button
             android:id="@+id/btn_pause"
