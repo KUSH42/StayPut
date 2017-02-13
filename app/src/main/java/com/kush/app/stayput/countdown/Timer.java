@@ -92,7 +92,7 @@ public class Timer extends Service {
     //Method for resetting/initializing the Timer
     private void reset() {
 
-        countDownInterval = 100;    //interval has to be <1000 to make sure everything updates correctly
+        countDownInterval = 500;    //interval has to be <1000 to make sure everything updates correctly
         if (timer != null) {
             timer.cancel();
         }
