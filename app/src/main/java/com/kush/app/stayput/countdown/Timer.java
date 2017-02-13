@@ -10,8 +10,6 @@ import android.os.CountDownTimer;
 import android.os.IBinder;
 import android.os.Vibrator;
 import android.support.v4.app.NotificationCompat;
-import android.text.Html;
-import android.text.Spanned;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -20,6 +18,7 @@ import com.kush.app.stayput.MainActivity;
 
 import net.example.kush.stayput.R;
 
+import static android.text.Html.fromHtml;
 import static com.kush.app.stayput.Consts.NOTIFICATION_OVERTIME_STRING;
 import static com.kush.app.stayput.Consts.NOTIFICATION_WORKTIME_STRING;
 
@@ -48,26 +47,13 @@ public class Timer extends Service {
     private long millisSurplus;
     private long countDownInterval;
 
-    protected Timer() {
+    public Timer() {
         btnStart = MainActivity.getBtnStart();
         btnPause = MainActivity.getBtnPause();
         btnResume = MainActivity.getBtnResume();
         btnCancel = MainActivity.getBtnCancel();
         tView = MainActivity.getView();
         reset();
-    }
-
-    //needed for color formatting of notification context text
-    //version check
-    @SuppressWarnings("deprecation")
-    private static Spanned fromHtml(String html) {
-        Spanned result;
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
-            result = Html.fromHtml(html, Html.FROM_HTML_MODE_LEGACY);
-        } else {
-            result = Html.fromHtml(html);
-        }
-        return result;
     }
 
     @Override
@@ -90,6 +76,7 @@ public class Timer extends Service {
             NOTIFICATION_MSG = NOTIFICATION_WORKTIME_STRING;
             CONTEXT_COLOR_HTML_START = CONTEXT_COLOR_HTML_RED_START;
         }
+        //noinspection deprecation
         Notification notification = new Notification.Builder(this)
                 .setContentTitle(getText(R.string.notification_title))
                 .setContentText(fromHtml(NOTIFICATION_MSG + CONTEXT_COLOR_HTML_START + (millisUntilFinished / (60 * 60 * 1000) % 24) + "h " + (millisUntilFinished / (60 * 1000) % 60) + "m " + (millisUntilFinished / 1000 % 60) + "s" + CONTEXT_COLOR_HTML_END))
@@ -137,6 +124,7 @@ public class Timer extends Service {
                     //Update notification
                     NotificationManager mNotificationManager =
                             (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+                    //noinspection deprecation
                     NotificationCompat.Builder mNotifyBuilder = new NotificationCompat.Builder(MainActivity.getContext())
                             .setContentTitle(getText(R.string.notification_title))
                             .setContentText(fromHtml(NOTIFICATION_WORKTIME_STRING + CONTEXT_COLOR_HTML_START + (millisUntilFinished / (60 * 60 * 1000) % 24) + "h " + (millisUntilFinished / (60 * 1000) % 60) + "m " + (millisUntilFinished / 1000 % 60) + "s" + CONTEXT_COLOR_HTML_END))
@@ -179,6 +167,7 @@ public class Timer extends Service {
                     //Update notification
                     NotificationManager mNotificationManager =
                             (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+                    //noinspection deprecation
                     NotificationCompat.Builder mNotifyBuilder = new NotificationCompat.Builder(MainActivity.getContext())
                             .setContentTitle(getText(R.string.notification_title))
                             .setContentText(fromHtml(NOTIFICATION_OVERTIME_STRING + CONTEXT_COLOR_HTML_START + (millisGained / (60 * 60 * 1000) % 24) + "h " + (millisGained / (60 * 1000) % 60) + "m " + (millisGained / 1000 % 60) + "s" + CONTEXT_COLOR_HTML_END))

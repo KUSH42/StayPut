@@ -4,11 +4,11 @@
         <item name="android:textAppearance">?android:attr/textAppearance</item>
     </style>
 
-    <style name="Widget.CalendarView"></style>
+    <style name="Widget.CalendarView" />
 
-    <style name="Widget.Holo.CalendarView" parent="Widget.CalendarView"></style>
+    <style name="Widget.Holo.CalendarView" parent="Widget.CalendarView" />
 
-    <style name="Widget.Holo.Light.CalendarView" parent="Widget.CalendarView"></style>
+    <style name="Widget.Holo.Light.CalendarView" parent="Widget.CalendarView" />
 
     <style name="TextAppearance.Small.CalendarViewWeekDayView" parent="@android:style/TextAppearance.Small">
         <item name="android:textColor">#005555</item>

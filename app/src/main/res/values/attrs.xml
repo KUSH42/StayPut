@@ -3,7 +3,7 @@
     <!-- The CalendarView style. -->
     <attr name="calendarViewStyle" format="reference" />
 
-    <declare-styleable name="CalendarView"></declare-styleable>
+    <declare-styleable name="CalendarView" />
 
     <!-- Framework styleables are not public. -->
     <declare-styleable name="TextAppearanceCompatStyleable">

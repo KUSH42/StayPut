@@ -5,9 +5,9 @@
     android:versionName="1.0">
 
     <uses-sdk
-        android:minSdkVersion="8"
-        android:targetSdkVersion="16" />
-    <uses-permission android:name="android.permission.VIBRATE"></uses-permission>
+        android:minSdkVersion="23"
+        android:targetSdkVersion="23" />
+    <uses-permission android:name="android.permission.VIBRATE" />
 
     <application
         android:icon="@drawable/ic_launcher"
@@ -17,7 +17,9 @@
 
         <service
             android:name="com.kush.app.stayput.countdown.Timer"
-            android:label="COUNTDOWN"></service>
+            android:description="@string/service_name"
+            android:icon="@drawable/ic_stat_name"
+            android:label="@string/service_name" />
 
         <activity
             android:name="com.kush.app.stayput.MainActivity"
