@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">StayPut Debug</string>
+    <string name="app_name">StayPut</string>
+    <string name="notification_title">StayPut</string>
+    <string name="service_name">StayPut</string>
 
 </resources>
