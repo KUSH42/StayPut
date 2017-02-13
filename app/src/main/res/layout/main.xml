@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:gravity="center"
@@ -33,7 +34,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/tv"
-            android:text="Start" />
+            android:text="Start"
+            tools:ignore="ObsoleteLayoutParam" />
 
         <Button
             android:id="@+id/btn_pause"
@@ -41,7 +43,8 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/tv"
             android:layout_toRightOf="@id/btn_start"
-            android:text="Pause" />
+            android:text="Pause"
+            tools:ignore="ObsoleteLayoutParam" />
 
         <Button
             android:id="@+id/btn_resume"
@@ -49,7 +52,8 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/tv"
             android:layout_toRightOf="@id/btn_pause"
-            android:text="Weiter" />
+            android:text="Weiter"
+            tools:ignore="ObsoleteLayoutParam" />
 
         <Button
             android:id="@+id/btn_cancel"
@@ -57,7 +61,8 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/tv"
             android:layout_toRightOf="@id/btn_resume"
-            android:text="Ende" />
+            android:text="Ende"
+            tools:ignore="ObsoleteLayoutParam" />
     </LinearLayout>
 </LinearLayout>
 
