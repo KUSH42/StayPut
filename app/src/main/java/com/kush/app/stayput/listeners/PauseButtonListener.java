@@ -23,16 +23,16 @@ public class PauseButtonListener implements View.OnClickListener {
 
     public PauseButtonListener(MainActivity context) {
         this.context = context;
-        this.btnStart = MainActivity.getBtnStart();
-        this.btnPause = MainActivity.getBtnPause();
-        this.btnResume = MainActivity.getBtnResume();
-        this.btnCancel = MainActivity.getBtnCancel();
+        this.btnStart = context.getBtnStart();
+        this.btnPause = context.getBtnPause();
+        this.btnResume = context.getBtnResume();
+        this.btnCancel = context.getBtnCancel();
     }
 
     @Override
     public void onClick(View v) {
         //When user request to pause the CountDownTimer
-        MainActivity.setPaused(true);
+        Timer.setPaused(true);
 
         //Stop Timer Service
         Intent i = new Intent(context, Timer.class);
