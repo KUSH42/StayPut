@@ -31,12 +31,10 @@ public class StartButtonListener implements View.OnClickListener {
 
     @Override
     public void onClick(View v) {
-
         Timer.setPaused(false);
         Timer.setCanceled(false);
         Timer.setCountUp(false);
         Timer.setTimeRemaining(Consts.WORKTIME_MAX);
-
         //Disable the start and pause button
         btnStart.setEnabled(false);
         btnResume.setEnabled(false);
