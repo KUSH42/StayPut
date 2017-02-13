@@ -11,11 +11,8 @@ import android.os.CountDownTimer;
 import android.os.IBinder;
 import android.os.Vibrator;
 import android.support.v4.app.NotificationCompat;
-import android.widget.Button;
-import android.widget.TextView;
 
 import com.kush.app.stayput.Consts;
-import com.kush.app.stayput.MainActivity;
 
 import net.example.kush.stayput.R;
 
@@ -45,14 +42,11 @@ public class Timer extends Service {
     private static boolean isPaused = false;
     //Declare a variable to hold count down timer's canceled status
     private static boolean isCanceled = false;
+    //Declares a flag to set if CountUp has finished
+    private static boolean isFinished = false;
     //Declare a variable to hold CountDownTimer remaining time
     private static long timeRemaining = Consts.WORKTIME_MAX;
     private final IBinder mBinder = new LocalBinder();
-    private Button btnStart;
-    private Button btnPause;
-    private Button btnResume;
-    private Button btnCancel;
-    private TextView tView;
     private CountDownTimer timer;
     private long millisInFuture;
     private long millisSurplus;
@@ -64,6 +58,9 @@ public class Timer extends Service {
     public static void setCountUp(boolean countUp) {
         Timer.countUp = countUp;
     }
+    public static boolean isCountUp() {
+        return countUp;
+    }
     public static void setPaused(boolean paused) {
         isPaused = paused;
     }
@@ -73,18 +70,13 @@ public class Timer extends Service {
     public static void setTimeRemaining(long newTimeRemaining) {
         timeRemaining = newTimeRemaining;
     }
+    public static long getTimeRemaining() {return timeRemaining;}
+    public static boolean hasFinished() {return isFinished;}
+    public static boolean isCanceled() {return isCanceled;}
 
-    private void getGui(MainActivity context) {
-        btnStart = context.getBtnStart();
-        btnPause = context.getBtnPause();
-        btnResume = context.getBtnResume();
-        btnCancel = context.getBtnCancel();
-        tView = context.getTView();
-    }
 
     @Override
     public IBinder onBind(Intent arg0) {
-        getGui(MainActivity.context);
         buildNotification();
         reset();
         return mBinder;
@@ -93,7 +85,6 @@ public class Timer extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         activeService = true;
-        getGui(MainActivity.context);
         buildNotification();
         reset();
         return START_NOT_STICKY; //START_NOT_STICKY: OS will not recreate service when it is killed
@@ -126,18 +117,15 @@ public class Timer extends Service {
 
     //Method for resetting/initializing the Timer
     private void reset() {
-
         countDownInterval = 500;    //interval has to be <1000 to make sure everything updates correctly
         if (timer != null) {
             timer.cancel();
         }
         if (countUp) {
             millisSurplus = timeRemaining;
-            tView.setTextColor(Consts.TIMER_COLOR_GREEN);
             timer = newUpTimer();
         } else {
             millisInFuture = timeRemaining;
-            tView.setTextColor(Consts.TIMER_COLOR_RED);
             timer = newDownTimer();
         }
     }
@@ -152,13 +140,11 @@ public class Timer extends Service {
             final String CONTEXT_COLOR_HTML_START = CONTEXT_COLOR_HTML_RED_START;
 
             public void onTick(long millisUntilFinished) {
-
                 //Do something in every tick
                 if (isPaused || isCanceled) {
                     //If user requested to pause or cancel the count down timer
                     cancel();
                 } else {
-                    tView.setText("" + (millisUntilFinished / (60 * 60 * 1000) % 24) + "h " + (millisUntilFinished / (60 * 1000) % 60) + "m " + (millisUntilFinished / 1000 % 60) + "s");
                     //Put count down timer remaining time in a variable
                     timeRemaining = millisUntilFinished;
                     //Update notification
@@ -180,7 +166,6 @@ public class Timer extends Service {
                 timeRemaining = Consts.OVERTIME_MAX;
                 millisSurplus = Consts.OVERTIME_MAX;
                 countUp = true;
-                tView.setTextColor(Consts.TIMER_COLOR_GREEN);
                 timer = newUpTimer();
             }
         }.start();
@@ -203,7 +188,6 @@ public class Timer extends Service {
                     cancel();
                 } else {
                     millisGained = Consts.OVERTIME_MAX - millisUntilFinished;
-                    tView.setText("" + (millisGained / (60 * 60 * 1000) % 24) + "h " + (millisGained / (60 * 1000) % 60) + "m " + (millisGained / 1000 % 60) + "s");
                     //Put count down timer remaining time in a variable
                     timeRemaining = millisUntilFinished;
                     //Update notification
@@ -221,12 +205,7 @@ public class Timer extends Service {
                 //Do something when count down finished
                 Vibrator v = (Vibrator) getApplicationContext().getSystemService(Context.VIBRATOR_SERVICE);
                 v.vibrate(1500);
-                //Disables the pause, resume and start buttons
-                btnPause.setEnabled(false);
-                btnResume.setEnabled(false);
-                btnStart.setEnabled(false);
-                //Enable the cancel button
-                btnCancel.setEnabled(true);
+                Timer.isFinished = true;
             }
         }.start();
     }

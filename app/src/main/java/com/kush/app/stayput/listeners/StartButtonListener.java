@@ -1,6 +1,5 @@
 package com.kush.app.stayput.listeners;
 
-import android.content.Intent;
 import android.view.View;
 import android.widget.Button;
 
@@ -44,9 +43,7 @@ public class StartButtonListener implements View.OnClickListener {
         //Enabled the pause and cancel button
         btnPause.setEnabled(true);
         btnCancel.setEnabled(true);
-
         //Initialize a new CountDownTimer instance
-        Intent i = new Intent(context, Timer.class);
-        context.startService(i);
+        context.startService();
     }
 }

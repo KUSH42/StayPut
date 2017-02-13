@@ -1,6 +1,5 @@
 package com.kush.app.stayput.listeners;
 
-import android.content.Intent;
 import android.view.View;
 import android.widget.Button;
 
@@ -41,8 +40,7 @@ public class ResumeButtonListener implements View.OnClickListener {
         Timer.setPaused(false);
         Timer.setCanceled(false);
         //Start Timer Service
-        Intent i = new Intent(context, Timer.class);
-        context.startService(i);
+        context.startService();
 
         //Set a Click Listener for cancel/stop button
         btnCancel.setOnClickListener(new CancelButtonListener(context));

@@ -1,6 +1,5 @@
 package com.kush.app.stayput.listeners;
 
-import android.content.Intent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -38,8 +37,7 @@ public class CancelButtonListener implements View.OnClickListener {
         Timer.setCanceled(true);
 
         //Stop Timer Service
-        Intent i = new Intent(context, Timer.class);
-        context.stopService(i);
+        context.stopService();
 
         //Disable the cancel, pause and resume button
         btnPause.setEnabled(false);
