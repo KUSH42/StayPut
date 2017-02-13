@@ -71,6 +71,7 @@ public class Timer extends Service {
         timeRemaining = newTimeRemaining;
     }
     public static long getTimeRemaining() {return timeRemaining;}
+    public static void setIsFinished(boolean val) {isFinished = val;}
     public static boolean hasFinished() {return isFinished;}
     public static boolean isCanceled() {return isCanceled;}
 

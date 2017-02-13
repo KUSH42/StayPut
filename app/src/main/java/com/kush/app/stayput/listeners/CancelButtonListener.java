@@ -35,17 +35,15 @@ public class CancelButtonListener implements View.OnClickListener {
     public void onClick(View v) {
         //When user request to cancel the CountDownTimer
         Timer.setCanceled(true);
-
+        Timer.setIsFinished(false);
         //Stop Timer Service
         context.stopService();
-
         //Disable the cancel, pause and resume button
         btnPause.setEnabled(false);
         btnResume.setEnabled(false);
         btnCancel.setEnabled(false);
         //Enable the start button
         btnStart.setEnabled(true);
-
         //Notify the user that CountDownTimer is canceled/stopped
         tView.setText("Zeit gestoppt");
     }

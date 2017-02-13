@@ -41,7 +41,6 @@ public class ResumeButtonListener implements View.OnClickListener {
         Timer.setCanceled(false);
         //Start Timer Service
         context.startService();
-
         //Set a Click Listener for cancel/stop button
         btnCancel.setOnClickListener(new CancelButtonListener(context));
     }

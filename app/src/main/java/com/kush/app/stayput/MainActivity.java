@@ -31,7 +31,6 @@ import static android.content.ContentValues.TAG;
 public class MainActivity extends Activity {
 
     //GUI references
-    public static MainActivity context;
     private TextView tView;
     private Button btnStart;
     private Button btnPause;
