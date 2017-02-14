@@ -13,9 +13,7 @@ import android.os.Vibrator;
 import android.support.v4.app.NotificationCompat;
 
 import com.kush.app.stayput.Consts;
-
-import net.example.kush.stayput.R;
-
+import com.kush.app.stayput.R;
 import static android.text.Html.fromHtml;
 import static com.kush.app.stayput.Consts.NOTIFICATION_OVERTIME_STRING;
 import static com.kush.app.stayput.Consts.NOTIFICATION_WORKTIME_STRING;
@@ -28,14 +26,12 @@ import static com.kush.app.stayput.Consts.NOTIFICATION_WORKTIME_STRING;
 
 public class Timer extends Service {
 
+    //Service notification ID
     private static final int NOTIFICATION_ID = 1;
-    private static final String CONTEXT_COLOR_HTML_RED_START = "<font color='red'>";
-    private static final String CONTEXT_COLOR_HTML_GREEN_START = "<font color='green'>";
-    private static final String CONTEXT_COLOR_HTML_END = "</font>";
-    //static flag to indicate if service is running
+    //Constant that defines for how long the phone will vibrate when the timers finish
+    private static final int VIBRATE_DURATION = 1500;
+    //Static flag to indicate if service is running
     public static boolean activeService = false;
-    @SuppressWarnings("FieldCanBeLocal")
-    private static String NOTIFICATION_MSG;
     //Declare a variable to hold the countUp flag
     private static boolean countUp = false;
     //Declare a variable to hold count down timer's paused status
@@ -97,17 +93,18 @@ public class Timer extends Service {
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         long millisUntilFinished = timeRemaining;
         String CONTEXT_COLOR_HTML_START;
+        String NOTIFICATION_MSG;
         if (countUp) {
             NOTIFICATION_MSG = NOTIFICATION_OVERTIME_STRING;
-            CONTEXT_COLOR_HTML_START = CONTEXT_COLOR_HTML_GREEN_START;
+            CONTEXT_COLOR_HTML_START = Consts.CONTEXT_COLOR_HTML_GREEN_START;
         } else {
             NOTIFICATION_MSG = NOTIFICATION_WORKTIME_STRING;
-            CONTEXT_COLOR_HTML_START = CONTEXT_COLOR_HTML_RED_START;
+            CONTEXT_COLOR_HTML_START = Consts.CONTEXT_COLOR_HTML_RED_START;
         }
         //noinspection deprecation
         Notification notification = new Notification.Builder(this)
                 .setContentTitle(getText(R.string.notification_title))
-                .setContentText(fromHtml(NOTIFICATION_MSG + CONTEXT_COLOR_HTML_START + (millisUntilFinished / (60 * 60 * 1000) % 24) + "h " + (millisUntilFinished / (60 * 1000) % 60) + "m " + (millisUntilFinished / 1000 % 60) + "s" + CONTEXT_COLOR_HTML_END))
+                .setContentText(fromHtml(NOTIFICATION_MSG + CONTEXT_COLOR_HTML_START + (millisUntilFinished / (60 * 60 * 1000) % 24) + "h " + (millisUntilFinished / (60 * 1000) % 60) + "m " + (millisUntilFinished / 1000 % 60) + "s" + Consts.CONTEXT_COLOR_HTML_END))
                 .setSmallIcon(R.drawable.ic_stat_name)
                 .setOngoing(true)
                 .setContentIntent(pendingIntent)
@@ -133,13 +130,12 @@ public class Timer extends Service {
 
     //Method for initializing an appropriate CountDownTimer
     private CountDownTimer newDownTimer() {
+        final String CONTEXT_COLOR_HTML_START = Consts.CONTEXT_COLOR_HTML_RED_START;
         final NotificationManager mNotificationManager =
                  (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         final Intent notificationIntent = new Intent(getApplicationContext(), com.kush.app.stayput.MainActivity.class);
         final PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         return new CountDownTimer(millisInFuture, countDownInterval) {
-            final String CONTEXT_COLOR_HTML_START = CONTEXT_COLOR_HTML_RED_START;
-
             public void onTick(long millisUntilFinished) {
                 //Do something in every tick
                 if (isPaused || isCanceled) {
@@ -153,7 +149,7 @@ public class Timer extends Service {
                     NotificationCompat.Builder mNotifyBuilder = new NotificationCompat.Builder(getApplicationContext())
                             .setContentTitle(getText(R.string.notification_title))
                             .setContentIntent(pendingIntent)
-                            .setContentText(fromHtml(NOTIFICATION_WORKTIME_STRING + CONTEXT_COLOR_HTML_START + (millisUntilFinished / (60 * 60 * 1000) % 24) + "h " + (millisUntilFinished / (60 * 1000) % 60) + "m " + (millisUntilFinished / 1000 % 60) + "s" + CONTEXT_COLOR_HTML_END))
+                            .setContentText(fromHtml(NOTIFICATION_WORKTIME_STRING + CONTEXT_COLOR_HTML_START + (millisUntilFinished / (60 * 60 * 1000) % 24) + "h " + (millisUntilFinished / (60 * 1000) % 60) + "m " + (millisUntilFinished / 1000 % 60) + "s" + Consts.CONTEXT_COLOR_HTML_END))
                             .setSmallIcon(R.drawable.ic_stat_name);
                     mNotificationManager.notify(NOTIFICATION_ID, mNotifyBuilder.build());
                 }
@@ -162,7 +158,7 @@ public class Timer extends Service {
             public void onFinish() {
                 //Do something when count down finished
                 Vibrator v = (Vibrator) getApplicationContext().getSystemService(Context.VIBRATOR_SERVICE); //haha he said vibrator!
-                v.vibrate(1500);
+                v.vibrate(VIBRATE_DURATION);
                 //Starts Countup
                 timeRemaining = Consts.OVERTIME_MAX;
                 millisSurplus = Consts.OVERTIME_MAX;
@@ -176,7 +172,7 @@ public class Timer extends Service {
     private CountDownTimer newUpTimer() {
         countUp = true;
         return new CountDownTimer(millisSurplus, countDownInterval) {
-            final String CONTEXT_COLOR_HTML_START = CONTEXT_COLOR_HTML_GREEN_START;
+            final String CONTEXT_COLOR_HTML_START = Consts.CONTEXT_COLOR_HTML_GREEN_START;
             final NotificationManager mNotificationManager =
                     (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
             final Intent notificationIntent = new Intent(getApplicationContext(), com.kush.app.stayput.MainActivity.class);
@@ -196,7 +192,7 @@ public class Timer extends Service {
                     NotificationCompat.Builder mNotifyBuilder = new NotificationCompat.Builder(getApplicationContext())
                             .setContentTitle(getText(R.string.notification_title))
                             .setContentIntent(pendingIntent)
-                            .setContentText(fromHtml(NOTIFICATION_OVERTIME_STRING + CONTEXT_COLOR_HTML_START + (millisGained / (60 * 60 * 1000) % 24) + "h " + (millisGained / (60 * 1000) % 60) + "m " + (millisGained / 1000 % 60) + "s" + CONTEXT_COLOR_HTML_END))
+                            .setContentText(fromHtml(NOTIFICATION_OVERTIME_STRING + CONTEXT_COLOR_HTML_START + (millisGained / (60 * 60 * 1000) % 24) + "h " + (millisGained / (60 * 1000) % 60) + "m " + (millisGained / 1000 % 60) + "s" + Consts.CONTEXT_COLOR_HTML_END))
                             .setSmallIcon(R.drawable.ic_stat_name);
                     mNotificationManager.notify(NOTIFICATION_ID, mNotifyBuilder.build());
                 }
@@ -205,8 +201,9 @@ public class Timer extends Service {
             public void onFinish() {
                 //Do something when count down finished
                 Vibrator v = (Vibrator) getApplicationContext().getSystemService(Context.VIBRATOR_SERVICE);
-                v.vibrate(1500);
+                v.vibrate(VIBRATE_DURATION);
                 Timer.isFinished = true;
+                timeRemaining = 0;
             }
         }.start();
     }

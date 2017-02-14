@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.util.Log;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -18,7 +19,9 @@ import com.kush.app.stayput.listeners.PauseButtonListener;
 import com.kush.app.stayput.listeners.ResumeButtonListener;
 import com.kush.app.stayput.listeners.StartButtonListener;
 
-import net.example.kush.stayput.R;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Locale;
 
 import static android.content.ContentValues.TAG;
 
@@ -32,13 +35,14 @@ public class MainActivity extends Activity {
 
     //GUI references
     private TextView tView;
+    private TextView tView2;
     private Button btnStart;
     private Button btnPause;
     private Button btnResume;
     private Button btnCancel;
     //TextField Handler
-    Handler handler = new Handler();
-    Runnable runnable = new Runnable() {
+    private final Handler handler = new Handler();
+    private final Runnable runnable = new Runnable() {
         public void run() {
             update();
         }
@@ -63,31 +67,60 @@ public class MainActivity extends Activity {
     public void startService() {
         Intent i = new Intent(getApplicationContext(), Timer.class);
         bindService(i, mServiceConnection, Context.BIND_AUTO_CREATE);
-        mBoundService.activeService = true;
+        mServiceBound = true;
+        Timer.activeService = true;
+
+        //tell the user when he's done
+        String s = (getDate(System.currentTimeMillis()+Timer.getTimeRemaining(), "hh:mm") + Consts.STR_END_FINISH_TIME);
+        tView2.setText(s);
+        //update() Handler
+        runnable.run();
+    }
+
+    /**
+     * Return date in specified format.
+     * @param milliSeconds Date in milliseconds
+     * @param dateFormat Date format
+     * @return String representing date in specified format
+     */
+    public static String getDate(long milliSeconds, String dateFormat)
+    {
+        // Create a DateFormatter object for displaying date in specified format.
+        SimpleDateFormat formatter = new SimpleDateFormat(dateFormat, Locale.getDefault());
+        // Create a calendar object that will convert the date and time value in milliseconds to date.
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(milliSeconds);
+        return formatter.format(calendar.getTime());
     }
 
 
     //Listeners call this to stop the service and therefore the timer
     public void stopService() {
-        mBoundService.stopSelf();
         unbindService(mServiceConnection);
-        mBoundService.activeService = false;
+        mServiceBound = false;
+        Timer.activeService = false;
+        mBoundService.stopSelf();
+        //stop update() Handler
+        handler.removeCallbacks(runnable);
     }
 
 
     //Method for updating the view and controls
-    public void update() {
+    private void update() {
         if (mServiceBound && !Timer.isCanceled()) {
             long millis;
+            String tViewTime;
             if (Timer.isCountUp()) {
                 tView.setTextColor(Consts.TIMER_COLOR_GREEN);
                 millis = Consts.OVERTIME_MAX - Timer.getTimeRemaining() + 1000; //+1000 to compensate for inaccuracies
-                tView.setText(("" + (millis / (60 * 60 * 1000) % 24) + "h " + (millis / (60 * 1000) % 60) + "m " + (millis / 1000 % 60) + "s").toString());
+                tViewTime = ("" + (millis / (60 * 60 * 1000) % 24) + "h " + (millis / (60 * 1000) % 60) + "m " + (millis / 1000 % 60) + "s");
+                tView.setText(tViewTime);
             }
             else {
-                millis = Timer.getTimeRemaining() - 200; //-200 to compensate for inaccuracies
                 tView.setTextColor(Consts.TIMER_COLOR_RED);
-                tView.setText(("" + (millis / (60 * 60 * 1000) % 24) + "h " + (millis / (60 * 1000) % 60) + "m " + (millis / 1000 % 60) + "s").toString());
+                millis = Timer.getTimeRemaining() - 200; //-200 to compensate for inaccuracies
+                tViewTime = ("" + (millis / (60 * 60 * 1000) % 24) + "h " + (millis / (60 * 1000) % 60) + "m " + (millis / 1000 % 60) + "s");
+                tView.setText(tViewTime);
             }
             if (Timer.hasFinished()) {
                 //Disables the pause, resume and start buttons
@@ -104,12 +137,14 @@ public class MainActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Log.v(TAG, "create");
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
         super.onCreate(savedInstanceState);
         //set the main layout of the activity
         setContentView(R.layout.main);
 
         //Get reference of the XML layout's widgets
         tView = (TextView) findViewById(R.id.tv);
+        tView2 = (TextView) findViewById(R.id.tv2);
         btnStart = (Button) findViewById(R.id.btn_start);
         btnPause = (Button) findViewById(R.id.btn_pause);
         btnResume = (Button) findViewById(R.id.btn_resume);
@@ -125,20 +160,27 @@ public class MainActivity extends Activity {
         btnPause.setOnClickListener(new PauseButtonListener(this));
         btnResume.setOnClickListener(new ResumeButtonListener(this));
         btnCancel.setOnClickListener(new CancelButtonListener(this));
-
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        // Bind to LocalService
-        Intent intent = new Intent(this, com.kush.app.stayput.countdown.Timer.class);
         //only bind service if one is active
         if (Timer.activeService) {
+            // Bind to LocalService
+            Intent intent = new Intent(this, com.kush.app.stayput.countdown.Timer.class);
             bindService(intent, mServiceConnection, Context.BIND_AUTO_CREATE);
+            //initiate gui
+            String timeFinished = getDate(System.currentTimeMillis()+Timer.getTimeRemaining(), "hh:mm") + Consts.STR_END_FINISH_TIME;
+            tView2.setText(timeFinished);
+            btnStart.setEnabled(false);
+            btnPause.setEnabled(true);
+            btnResume.setEnabled(false);
+            btnCancel.setEnabled(true);
+            //update() Handler
+            runnable.run();
         }
-        //update() Handler
-        runnable.run();
+        else tView.setText(Consts.WORKTIME);
     }
 
     @Override

@@ -37,7 +37,9 @@ public class CancelButtonListener implements View.OnClickListener {
         Timer.setCanceled(true);
         Timer.setIsFinished(false);
         //Stop Timer Service
-        context.stopService();
+        if (Timer.activeService) {
+            context.stopService();
+        }
         //Disable the cancel, pause and resume button
         btnPause.setEnabled(false);
         btnResume.setEnabled(false);
