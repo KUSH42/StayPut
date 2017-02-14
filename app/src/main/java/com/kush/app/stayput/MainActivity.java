@@ -48,11 +48,12 @@ public class MainActivity extends Activity {
         }
     };
     //service stuff
-    private Timer mBoundService;
+    private static Timer mBoundService;
     private boolean mServiceBound = false;
     private final ServiceConnection mServiceConnection = new ServiceConnection() {
         @Override
         public void onServiceDisconnected(ComponentName name) {
+            mBoundService = null;
             mServiceBound = false;
         }
         @Override
@@ -67,12 +68,9 @@ public class MainActivity extends Activity {
     public void startService() {
         Intent i = new Intent(getApplicationContext(), Timer.class);
         bindService(i, mServiceConnection, Context.BIND_AUTO_CREATE);
-        mServiceBound = true;
-        Timer.activeService = true;
-
         //tell the user when he's done
-        String s = (getDate(System.currentTimeMillis()+Timer.getTimeRemaining(), "hh:mm") + Consts.STR_END_FINISH_TIME);
-        tView2.setText(s);
+        String tViewTime = (getDate(System.currentTimeMillis()+Timer.getTimeRemaining(), "hh:mm") + Consts.STR_END_FINISH_TIME);
+        tView2.setText(tViewTime);
         //update() Handler
         runnable.run();
     }
@@ -97,9 +95,9 @@ public class MainActivity extends Activity {
     //Listeners call this to stop the service and therefore the timer
     public void stopService() {
         unbindService(mServiceConnection);
-        mServiceBound = false;
-        Timer.activeService = false;
         mBoundService.stopSelf();
+        mBoundService = null;
+        Timer.activeService = false;
         //stop update() Handler
         handler.removeCallbacks(runnable);
     }
@@ -167,7 +165,7 @@ public class MainActivity extends Activity {
         super.onStart();
         //only bind service if one is active
         if (Timer.activeService) {
-            // Bind to LocalService
+            //Bind to LocalService
             Intent intent = new Intent(this, com.kush.app.stayput.countdown.Timer.class);
             bindService(intent, mServiceConnection, Context.BIND_AUTO_CREATE);
             //initiate gui
@@ -188,7 +186,6 @@ public class MainActivity extends Activity {
         super.onStop();
         if (mServiceBound) {
             unbindService(mServiceConnection);
-            mServiceBound = false;
         }
     }
 
