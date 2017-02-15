@@ -10,7 +10,6 @@ import android.os.Binder;
 import android.os.CountDownTimer;
 import android.os.IBinder;
 import android.os.Vibrator;
-import android.support.v4.app.NotificationCompat;
 
 import com.kush.app.stayput.R;
 
@@ -47,11 +46,18 @@ public class Timer extends Service {
     private static boolean isFinished = false;
     //Declare a variable to hold CountDownTimer remaining time
     private static long timeRemaining = WORKTIME_MAX;
-    private final IBinder mBinder = new LocalBinder();
-    private CountDownTimer timer;
+    //Interval for the CountdownTimers has to be <1000 to make sure everything updates correctly
+    private static final long countDownInterval = 500;
     private long millisInFuture;
     private long millisSurplus;
-    private long countDownInterval;
+    private final IBinder mBinder = new LocalBinder();
+    private static String contextColorHtmlStart;
+    private static NotificationManager mNotificationManager;
+    private static Intent notificationIntent;
+    private static PendingIntent pendingIntent;
+    private static Notification.Builder statusBarNBuilder;
+    private static Notification notification;
+    private CountDownTimer timer;
 
     public Timer() {
     }
@@ -80,51 +86,53 @@ public class Timer extends Service {
     @Override
     public IBinder onBind(Intent arg0) {
         activeService = true;
-        buildNotification();
-        reset();
+        init();
         return mBinder;
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         activeService = true;
-        buildNotification();
-        reset();
+        init();
         return START_NOT_STICKY; //START_NOT_STICKY: OS will not recreate service when it is killed
     }
 
     private void buildNotification() {
         //runs service in foreground
-        Intent notificationIntent = new Intent(this, com.kush.app.stayput.MainActivity.class);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         long millisUntilFinished = timeRemaining;
-        String CONTEXT_COLOR_HTML_START;
-        String NOTIFICATION_MSG;
+        String notificationMsg;
         if (countUp) {
-            NOTIFICATION_MSG = NOTIFICATION_OVERTIME_STRING;
-            CONTEXT_COLOR_HTML_START = CONTEXT_COLOR_HTML_GREEN_START;
+            notificationMsg = NOTIFICATION_OVERTIME_STRING;
+            contextColorHtmlStart = CONTEXT_COLOR_HTML_GREEN_START;
         } else {
-            NOTIFICATION_MSG = NOTIFICATION_WORKTIME_STRING;
-            CONTEXT_COLOR_HTML_START = CONTEXT_COLOR_HTML_RED_START;
+            notificationMsg = NOTIFICATION_WORKTIME_STRING;
+            contextColorHtmlStart = CONTEXT_COLOR_HTML_RED_START;
         }
         //noinspection deprecation
-        Notification notification = new Notification.Builder(this)
-                .setContentTitle(getText(R.string.notification_title))
-                .setContentText(fromHtml(NOTIFICATION_MSG + CONTEXT_COLOR_HTML_START + (millisUntilFinished / (60 * 60 * 1000) % 24) + "h " + (millisUntilFinished / (60 * 1000) % 60) + "m " + (millisUntilFinished / 1000 % 60) + "s" + CONTEXT_COLOR_HTML_END))
-                .setSmallIcon(R.drawable.ic_stat_name)
-                .setOngoing(true)
-                .setContentIntent(pendingIntent)
-                .build();
-
+        mNotificationManager.cancelAll();
+        statusBarNBuilder.setContentText(fromHtml(notificationMsg + contextColorHtmlStart + (millisUntilFinished / (60 * 60 * 1000) % 24) + "h " + (millisUntilFinished / (60 * 1000) % 60) + "m " + (millisUntilFinished / 1000 % 60) + "s" + CONTEXT_COLOR_HTML_END));
+        notification = statusBarNBuilder.build();
         startForeground(NOTIFICATION_ID, notification);
     }
 
-    //Method for resetting/initializing the Timer
-    private void reset() {
-        countDownInterval = 500;    //interval has to be <1000 to make sure everything updates correctly
+    //Method for initializing the service
+    private void init() {
         if (timer != null) {
             timer.cancel();
         }
+        if (mNotificationManager == null) {
+            mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        }
+        notificationIntent = new Intent(getApplicationContext(), com.kush.app.stayput.MainActivity.class);
+        pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        if (statusBarNBuilder == null) {
+            statusBarNBuilder = new Notification.Builder(this);
+            statusBarNBuilder.setContentTitle(getText(R.string.notification_title))
+                    .setSmallIcon(R.drawable.ic_stat_name)
+                    .setOngoing(true)
+                    .setContentIntent(pendingIntent);
+        }
+        buildNotification();
         if (countUp) {
             millisSurplus = timeRemaining;
             timer = newUpTimer();
@@ -136,11 +144,8 @@ public class Timer extends Service {
 
     //Method for initializing an appropriate CountDownTimer
     private CountDownTimer newDownTimer() {
-        final String CONTEXT_COLOR_HTML_START = CONTEXT_COLOR_HTML_RED_START;
-        final NotificationManager mNotificationManager =
-                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        final Intent notificationIntent = new Intent(getApplicationContext(), com.kush.app.stayput.MainActivity.class);
-        final PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        mNotificationManager.cancelAll();
+        contextColorHtmlStart = CONTEXT_COLOR_HTML_RED_START;
         return new CountDownTimer(millisInFuture, countDownInterval) {
             public void onTick(long millisUntilFinished) {
                 //Do something in every tick
@@ -152,12 +157,9 @@ public class Timer extends Service {
                     timeRemaining = millisUntilFinished;
                     //Update notification
                     //noinspection deprecation
-                    NotificationCompat.Builder mNotifyBuilder = new NotificationCompat.Builder(getApplicationContext())
-                            .setContentTitle(getText(R.string.notification_title))
-                            .setContentIntent(pendingIntent)
-                            .setContentText(fromHtml(NOTIFICATION_WORKTIME_STRING + CONTEXT_COLOR_HTML_START + (millisUntilFinished / (60 * 60 * 1000) % 24) + "h " + (millisUntilFinished / (60 * 1000) % 60) + "m " + (millisUntilFinished / 1000 % 60) + "s" + CONTEXT_COLOR_HTML_END))
-                            .setSmallIcon(R.drawable.ic_stat_name);
-                    mNotificationManager.notify(NOTIFICATION_ID, mNotifyBuilder.build());
+                    statusBarNBuilder.setContentText(fromHtml(NOTIFICATION_WORKTIME_STRING + contextColorHtmlStart + (millisUntilFinished / (60 * 60 * 1000) % 24) + "h " + (millisUntilFinished / (60 * 1000) % 60) + "m " + (millisUntilFinished / 1000 % 60) + "s" + CONTEXT_COLOR_HTML_END));
+                    notification = statusBarNBuilder.build();
+                    mNotificationManager.notify(NOTIFICATION_ID, notification);
                 }
             }
 
@@ -176,13 +178,10 @@ public class Timer extends Service {
 
     //Method for initializing an appropriate CountUpTimer
     private CountDownTimer newUpTimer() {
+        mNotificationManager.cancelAll();
         countUp = true;
+        contextColorHtmlStart = CONTEXT_COLOR_HTML_GREEN_START;
         return new CountDownTimer(millisSurplus, countDownInterval) {
-            final String CONTEXT_COLOR_HTML_START = CONTEXT_COLOR_HTML_GREEN_START;
-            final NotificationManager mNotificationManager =
-                    (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-            final Intent notificationIntent = new Intent(getApplicationContext(), com.kush.app.stayput.MainActivity.class);
-            final PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
             public void onTick(long millisUntilFinished) {
                 long millisGained;
                 //Do something in every tick
@@ -195,12 +194,9 @@ public class Timer extends Service {
                     timeRemaining = millisUntilFinished;
                     //Update notification
                     //noinspection deprecation
-                    NotificationCompat.Builder mNotifyBuilder = new NotificationCompat.Builder(getApplicationContext())
-                            .setContentTitle(getText(R.string.notification_title))
-                            .setContentIntent(pendingIntent)
-                            .setContentText(fromHtml(NOTIFICATION_OVERTIME_STRING + CONTEXT_COLOR_HTML_START + (millisGained / (60 * 60 * 1000) % 24) + "h " + (millisGained / (60 * 1000) % 60) + "m " + (millisGained / 1000 % 60) + "s" + CONTEXT_COLOR_HTML_END))
-                            .setSmallIcon(R.drawable.ic_stat_name);
-                    mNotificationManager.notify(NOTIFICATION_ID, mNotifyBuilder.build());
+                    statusBarNBuilder.setContentText(fromHtml(NOTIFICATION_OVERTIME_STRING + contextColorHtmlStart + (millisGained / (60 * 60 * 1000) % 24) + "h " + (millisGained / (60 * 1000) % 60) + "m " + (millisGained / 1000 % 60) + "s" + CONTEXT_COLOR_HTML_END));
+                    notification = statusBarNBuilder.build();
+                    mNotificationManager.notify(NOTIFICATION_ID, notification);
                 }
             }
 
